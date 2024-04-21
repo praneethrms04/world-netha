@@ -36,8 +36,6 @@ const PartnerPreference = () => {
       document.getElementById('partnerState')
    }
 
-
-
    const fetchCurrentuser = async () => {
       const currentUser = await getCurrentUser()
       const { id, userObject } = currentUser

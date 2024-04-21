@@ -23,12 +23,12 @@ const SearchCard = (props) => {
             </div>
             <div className='w-[60%]'>
                <div className='mb-2'>
-                  <p className="font-semibold text-lg">{profileData?.name}</p>
+                  <p className="font-semibold text-lg">{profileData?.firstName}</p>
                </div>
                <div className="mt-2">
                   <div className='flex flex-col gap-y-2'>
                      <div>
-                        <p className='text-sm'>{profileData?.aboutMe}</p>
+                        <p className='line-clamp-3  text-sm'>{profileData?.description}</p>
                      </div>
                      <div className='w-full flex flex-row items-center gap-x-3'>
                         <div className='w-1/2 flex items-center gap-x-4'>
@@ -37,13 +37,13 @@ const SearchCard = (props) => {
                         </div>
                         <div className='w-1/2 flex items-center gap-x-4'>
                            <p>Qualification</p>
-                           <p className='font-bold'>{profileData.educationDetails} </p>
+                           <p className='font-bold truncate'>{profileData.qualificationCategory} </p>
                         </div>
                      </div>
                      <div className='w-full flex flex-row items-center gap-x-3'>
                         <div className='w-1/2 flex items-center gap-x-4'>
                            <p>Height</p>
-                           <p className='font-bold'>{profileData.height}</p>
+                           <p className='font-bold'>{profileData.height} cm</p>
                         </div>
                         <div className='w-1/2 flex items-center gap-x-4'>
                            <p>Religion / Community</p>
@@ -62,14 +62,14 @@ const SearchCard = (props) => {
                      </div>
                      <div className='py-2 flex justify-between items-center'>
                         <div>
-                           <Link href="/" className='text-[#726300] underline'>Full details</Link>
+                           <Link href={`/profiles/${profileData.id}`} className='text-[#726300] underline'>Full details</Link>
                         </div>
-                        <div className='flex items-center gap-x-4'>
+                        {/* <div className='flex items-center gap-x-4'>
                            <Button variant="gray" size="small" className="text-sm font-normal py-2 border-[#726300]" > <div className='flex flex-row gap-x-2 justify-center items-center'> <Image src={assets.sendInterest} width={15} height={15} alt="sendinterest" /> <span>Send interest</span>
                            </div>  </Button>
                            <Button size="small" className="text-sm font-normal px-4 py-2 border-[#726300]" > <div className='flex flex-row gap-x-2 justify-center items-center'> <Image src={assets.save} width={15} height={15} alt='save' /> <span>Save</span>
                            </div>  </Button>
-                        </div>
+                        </div> */}
                      </div>
                   </div>
                </div>

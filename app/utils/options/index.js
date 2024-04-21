@@ -5,9 +5,20 @@ export const genderOptions = [
    { key: 'female', value: 'Female' },
 ]
 
+export const searchGenderOptions = [
+   { value: 'select', key: 'no' },
+   { value: 'Male', key: 'male' },
+   { value: 'Female', key: 'female' },
+]
+
 export const maritalOptions = [
    { key: 'unMarried', value: 'Unmarried' },
    { key: 'secondMarriage', value: 'Secondmarriage' }
+];
+export const searchMaritalOptions = [
+   { value: 'select', key: 'no' },
+   { value: 'UnMarried', key: 'unmarried' },
+   { value: 'SecondMarriage', key: 'secondmarriage' }
 ];
 
 const heightData = [

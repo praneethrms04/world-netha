@@ -2,9 +2,7 @@
 import { CallToAction, HeroSection, SuccessMatches } from "./components/home";
 
 import FeatureCard from "./components/common/FeatureCard";
-import { get, getDatabase, ref } from "firebase/database";
 import { Suspense, useEffect, useState } from "react";
-
 import getAllProfies from "@/app/lib/getAllProfiles"
 import { FeatureCardLoader } from "./utils/loaders";
 
