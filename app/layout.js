@@ -5,7 +5,6 @@ import Header from "./components/common/Header";
 import Footer from "./components/common/Footer";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
-import ReduxProvider from "./Provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -24,7 +23,6 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={notosans.className} >
-        <ReduxProvider>
           <ToastContainer
             position="top-center"
             autoClose={3000}
@@ -41,7 +39,7 @@ export default function RootLayout({ children }) {
           <Header />
           {children}
           <Footer />
-        </ReduxProvider>
+
       </body>
     </html>
   );

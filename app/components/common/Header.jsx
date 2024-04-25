@@ -12,7 +12,6 @@ import { toast } from "react-toastify";
 import { signOut } from "firebase/auth";
 import { auth } from "@/app/firebaseConfig";
 import { useRouter } from "next/navigation";
-import Protected from "@/app/hooks/useProtected";
 
 // import Login from "../Login/Login";
 
@@ -20,7 +19,6 @@ const Header = () => {
    const [openLogin, setOpenLogin] = useState(false);
    const [openRegister, setOpenRegister] = useState(false);
    const router = useRouter()
-
    const isAuthenticated = userAuth()
 
    const handleClickOpenLogin = () => {
@@ -77,7 +75,8 @@ const Header = () => {
          <ReactModal
             isOpen={openLogin}
             onRequestClose={() => setOpenLogin(false)}
-            style={customStyles}
+            className="bg-white rounded-md shadow-2xl  flex justify-center items-center absolute top-1/4 left-1/3 px-3 py-3 backdrop-blur-md "
+
          >
             <Login openLogin={openLogin} setOpenLogin={setOpenLogin} openRegister={openRegister} setOpenRegister={setOpenRegister} />
          </ReactModal>
@@ -86,6 +85,7 @@ const Header = () => {
             isOpen={openRegister}
             onRequestClose={() => setOpenRegister(false)}
             style={customStyles}
+            // className="bg-white rounded-md shadow-2xl  flex justify-center items-center absolute top-[15%] left-1/3 px-3 py-3 backdrop-blur-md w-[800px]  h-[550px] overflow-auto "
 
          >
             <Register openLogin={openLogin} setOpenLogin={setOpenLogin} openRegister={openRegister} setOpenRegister={setOpenRegister} />
@@ -104,7 +104,7 @@ export default Header;
 
 const customStyles = {
    content: {
-      top: '50%',
+      top: '55%',
       left: '50%',
       right: 'auto',
       width: "750px",

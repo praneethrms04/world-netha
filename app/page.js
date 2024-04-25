@@ -5,6 +5,7 @@ import FeatureCard from "./components/common/FeatureCard";
 import { Suspense, useEffect, useState } from "react";
 import getAllProfies from "@/app/lib/getAllProfiles"
 import { FeatureCardLoader } from "./utils/loaders";
+import { getCurrentUser } from "./lib/getCurrentUser";
 
 
 
@@ -12,37 +13,55 @@ export default function Home() {
 
   const [maleProfiles, setMaleProfiles] = useState([]);
   const [femaleProfiles, setFemaleProfiles] = useState([]);
+  const [currentProfile, setCurrentProfile] = useState()
+  const [id, setId] = useState()
+  console.log(id)
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
 
-    fetchMaleProfiles();
-    fetchFemaleProfiles();
+    fetchMaleProfiles(id);
+    fetchFemaleProfiles(id);
+    fetchCurrentProfile()
 
-  }, []);
+  }, [id]);
 
-  const fetchMaleProfiles = async () => {
+  const fetchCurrentProfile = async () => {
+
+    try {
+      const profileData = await getCurrentUser();
+      const { id, userObject } = profileData
+      setCurrentProfile(userObject)
+      setId(id)
+
+    } catch (error) {
+      console.error("Error fetching male profiles:", error);
+    }
+  }
+
+
+
+  const fetchMaleProfiles = async (currentId) => {
     setLoading(true)
     try {
       const profilesData = await getAllProfies();
       const maleProfilesData = profilesData.filter(
-        (profile) => profile.gender === "Male"
+        (profile) => profile.gender === "Male" && profile.id !== currentId
       ).slice(0, 4);
       setMaleProfiles(maleProfilesData);
       setLoading(false)
-
     } catch (error) {
       console.error("Error fetching male profiles:", error);
     }
   };
 
-  const fetchFemaleProfiles = async () => {
+  const fetchFemaleProfiles = async (currentId) => {
     try {
       const profilesData = await getAllProfies();
       const femaleProfilesData = profilesData.filter(
-        (profile) => profile.gender === "Female"
+        (profile) => profile.gender === "Female" && profile.id !== currentId
+
       ).slice(0, 4);
-      console.log(femaleProfilesData)
       setFemaleProfiles(femaleProfilesData);
     } catch (error) {
       console.error("Error fetching female profiles:", error);

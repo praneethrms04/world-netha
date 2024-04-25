@@ -1,12 +1,10 @@
 
 "use client"
-
+import React, { useState } from 'react';
 import { Form, Formik } from 'formik';
-import React, { useState } from 'react'
 import { Button } from './Button';
 
-const MultiStepForm = ({ children, initialValues, onSubmit, }) => {
-
+const MultiStepForm = ({ children, initialValues, onSubmit }) => {
    const [stepNumber, setStepNumber] = useState(0);
    const [snapshot, setSnapshot] = useState(initialValues);
 
@@ -15,6 +13,7 @@ const MultiStepForm = ({ children, initialValues, onSubmit, }) => {
    const totalSteps = steps.length;
    const isLastStep = stepNumber === totalSteps - 1;
 
+   const progressPercentage = ((stepNumber + 1) / totalSteps) * 100;
 
    const next = values => {
       setSnapshot(values);
@@ -28,7 +27,6 @@ const MultiStepForm = ({ children, initialValues, onSubmit, }) => {
 
    const handleSubmit = async (values, actions) => {
       if (step.props.onSubmit) {
-         
          await step.props.onSubmit(values, actions);
       }
       if (isLastStep) {
@@ -46,24 +44,36 @@ const MultiStepForm = ({ children, initialValues, onSubmit, }) => {
          onSubmit={handleSubmit}
          validationSchema={step.props.validationSchema}
       >
-         
          {formik => (
             <Form>
-               <p className='absolute right-5 top-12 '>
-                  Step {stepNumber + 1} of {totalSteps}
-               </p>
-               <div className='relative'>
-                  <div className='mb-3'>
-                     {step}
+               <div className="">
+                  <div className="flex justify-between">
+                     <h4>New Profile Registration</h4>
+                     <h4>
+                        Step {stepNumber + 1} of {totalSteps} ({Math.round(progressPercentage)}%)
+                     </h4>
                   </div>
-                  <div className=' flex justify-end gap-x-6'>
-                     {stepNumber > 0 && (
-                        <Button variant="gray" className="rounded-md" onClick={() => previous(formik.values)} type="button">
-                           Back
-                        </Button>
-                     )}
+                  <div className="mb-3 overflow-auto">{step}</div>
+                  <div className="bg-white top-2 flex justify-between items-center gap-x-6 py-3 px-6">
                      <div>
-                        <Button variant="gray" className="rounded-md" disabled={formik.isSubmitting} type="submit">
+                        {stepNumber > 0 && (
+                           <Button
+                              variant="gray"
+                              className="rounded-md"
+                              onClick={() => previous(formik.values)}
+                              type="button"
+                           >
+                              Back
+                           </Button>
+                        )}
+                     </div>
+                     <div>
+                        <Button
+                           variant="gray"
+                           className="rounded-md"
+                           disabled={formik.isSubmitting}
+                           type="submit"
+                        >
                            {isLastStep ? 'Submit' : 'Next'}
                         </Button>
                      </div>
@@ -72,9 +82,11 @@ const MultiStepForm = ({ children, initialValues, onSubmit, }) => {
             </Form>
          )}
       </Formik>
-   )
-}
+   );
+};
 
-export default MultiStepForm
+export default MultiStepForm;
 
-export const FormStep = ({ stepName = '', children }) => children
+export const FormStep = ({ stepName = '', children }) => children;
+
+

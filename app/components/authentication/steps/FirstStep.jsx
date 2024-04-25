@@ -27,8 +27,8 @@ const FirstStep = () => {
             >
 
                <h3 className='pb-4'>Personal Information</h3>
-               <div className='flex flex-row gap-x-2 '>
-                  <div >
+               <div className='w-full flex flex-row gap-x-2 '>
+                  <div className='w-1/2' >
                      <FormControl
                         control="input"
                         label="First Name"
@@ -40,7 +40,7 @@ const FirstStep = () => {
 
                      />
                   </div>
-                  <div >
+                  <div className='w-1/2'>
                      <FormControl
                         control="input"
                         label="Surname"

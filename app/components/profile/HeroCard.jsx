@@ -11,6 +11,8 @@ import PhotoGallary from './PhotoGallary'
 import SendInterest from './SendInterest'
 import Protected from "@/app/hooks/useProtected"
 import { cmToFeetAndInches } from '@/app/utils/helpers/cmToFeet'
+import Login from '../authentication/Login'
+import { toast } from 'react-toastify'
 
 const HeroCard = (props) => {
 
@@ -28,7 +30,7 @@ const HeroCard = (props) => {
       if (token) {
          setShowInterest((prev) => !prev)
       } else {
-         alert("please login to send interest")
+         toast.error("Please login to send interest")
       }
    }
 
@@ -135,7 +137,7 @@ export default HeroCard
 
 const customStyles = {
    content: {
-      top: '50%',
+      top: '55%',
       left: '50%',
       right: 'auto',
       width: "750px",

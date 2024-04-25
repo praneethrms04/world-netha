@@ -7,7 +7,6 @@ import { getDownloadURL, storage, getStorage, ref as storageRef, uploadBytes, up
 import { Button } from '../ui/Button'
 import * as yup from 'yup'
 import FormControl from '../ui/FormControl'
-import RadioGroup from '../ui/RadioGroup'
 import citiesData from "../../utils/options/state_cities.json"
 import { annualIncomeDataOptions, brothersDataOptions, casteDataOptions, citizenshipDataOptions, complexionOptions, genderOptions, heightOptions, kujaDosamOptions, maritalOptions, motherTongueOptions, nakshatrasOptions, occupationDataOptions, padamOptions, physicalStatusOptions, placeOfBirthOptions, qualificationDataOptions, raashiOptions, religionOptions, sistersDataOptions, stateDataOptions, timeOfBirthOptions } from '@/app/utils/options'
 import MultiStepForm, { FormStep } from '../ui/MultiStepForm'
@@ -15,11 +14,8 @@ import { getDatabase, push, ref, set } from 'firebase/database'
 import { useDropzone } from 'react-dropzone'
 import ImagePreView from '../profile/ImagePreView'
 import { IoCloudUploadOutline } from "react-icons/io5";
-import ReactModal from 'react-modal'
 import { createUserWithEmailAndPassword } from 'firebase/auth'
 import app, { auth } from '@/app/firebaseConfig'
-import { useDispatch } from 'react-redux'
-import { signupUser } from '@/app/redux/features/auth/authApi'
 import FirstStep from './steps/FirstStep';
 import ThirdStep from './steps/ThirdStep';
 import FourthStep from './steps/FourthStep';
@@ -249,9 +245,7 @@ const Register = (props) => {
    return (
       <div className='mx-auto max-w-screen-2xl px-4 md:px-8 '>
          <h2 className="mb-4 text-center text-2xl font-bold text-gray-800 md:mb-8 lg:text-3xl">Register</h2>
-         <div className='flex justify-between'>
-            <h4>New Profile Registration</h4>
-         </div>
+  
          <MultiStepForm
             initialValues={initialValues}
             onSubmit={handleFormSubmit}

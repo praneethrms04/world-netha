@@ -4,6 +4,7 @@ import ProfieleDetails from '@/app/components/profile/PersonalDetails'
 import SuggestedCcard from '@/app/components/profile/SuggestedCard'
 import { profiles } from '@/app/constants'
 import getAllProfies from '@/app/lib/getAllProfiles'
+import { getCurrentUser } from '@/app/lib/getCurrentUser'
 import getProfile from '@/app/lib/getProfile'
 import { useParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
@@ -14,6 +15,7 @@ const WholeProfile = ({ profileData }) => {
    const [userGender, setUserGender] = useState('')
    const [profiles, setProfiles] = useState([]);
    const [loading, setLoading] = useState(false)
+   const [id, setId] = useState()
 
    const getUserById = async () => {
       setLoading(true)
@@ -28,17 +30,29 @@ const WholeProfile = ({ profileData }) => {
 
    useEffect(() => {
       if (typeof window !== "undefined") {
-         fetchProfiles();
+         fetchProfiles(id);
          getUserById()
-      }
-   }, [userGender]);
+         fetchCurrentProfile()
 
-   const fetchProfiles = async () => {
+      }
+   }, [userGender, id]);
+
+   const fetchCurrentProfile = async () => {
+      try {
+         const profileData = await getCurrentUser();
+         const { id } = profileData
+         setId(id)
+      } catch (error) {
+         console.error("Error fetching profiles:", error);
+      }
+   }
+
+   const fetchProfiles = async (currentId) => {
       setLoading(true)
       try {
          const profilesData = await getAllProfies();
          const data = profilesData.filter(
-            (profile) => profile.gender === userGender && profile.id !== profileId
+            (profile) => profile.gender === userGender && profile.id !== profileId && profile.id !== currentId
          );
          setProfiles(data);
          setLoading(false)
@@ -47,8 +61,6 @@ const WholeProfile = ({ profileData }) => {
       }
    };
 
-   console.log(profileId)
-   console.log(profileData)
    return (
       <>
          <div className='mx-auto max-w-screen-2xl py-5 px-4 md:px-8 '>
