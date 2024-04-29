@@ -23,7 +23,6 @@ const FourthStep = () => {
                     control="textarea"
                     label="About Me"
                     name="description"
-                    star="true"
                     as="textarea"
                     rows={3}
                     cols={40}

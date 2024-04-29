@@ -3,7 +3,7 @@ import * as React from 'react'
 import { Button } from '../ui/Button';
 import { Form, Formik } from 'formik';
 import FormControl from '../ui/FormControl';
-import { searchGenderOptions, searchMaritalOptions } from '@/app/utils/options';
+import { ageFromOptions, ageToOptions, maritalOptions, quickMaritalOptions, searchGenderOptions, searchMaritalOptions } from '@/app/utils/options';
 import { useRouter } from 'next/navigation';
 
 const QuickSearch = () => {
@@ -37,36 +37,47 @@ const QuickSearch = () => {
                   (formikProps) => {
                      return (
                         <Form>
-                           <div className='flex justify-between   items-center px-6'>
-                              <div >
+                           <div className='w-full flex flex-row gap-x-4   items-center px-6'>
+                              <div className='w-3/12' >
                                  <FormControl
                                     control="select"
                                     label="I am looking for"
                                     name="gender"
-                                    inputStyles="w-[250px] text-black"
+                                    inputStyles="w-full text-black"
                                     labelStyles="w-full text-black"
                                     options={searchGenderOptions}
                                  />
                               </div>
-                              <div >
+                              <div className='w-3/12' >
                                  <FormControl
-                                    control="input"
-                                    label="Age From"sea
+                                    control="select"
+                                    label="Age From"
                                     name="agefrom"
+                                    options={ageFromOptions}
                                     inputStyles="w-full text-black"
                                     labelStyles="w-full text-black"
                                  />
                               </div>
-                              <div >
+                              <div className='w-3/12'>
                                  <FormControl
-                                    control="input"
-                                    label="Age To"
+                                    control="select"
+                                    label="Age To" 
                                     name="ageto"
+                                    options={ageToOptions}
                                     inputStyles="w-full text-black"
                                     labelStyles="w-full text-black"
                                  />
                               </div>
-                    
+                              <div className='w-3/12'>
+                                 <FormControl
+                                    control="select"
+                                    label="Marital Status"
+                                    name="maritalstatus"
+                                    options={quickMaritalOptions}
+                                    inputStyles="w-full text-black"
+                                    labelStyles="w-full text-black"
+                                 />
+                              </div>
                               <div >
                                  <Button variant="gray" className="mt-5" >Search</Button>
                               </div>

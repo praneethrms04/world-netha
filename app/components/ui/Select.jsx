@@ -6,7 +6,7 @@ const Select = (props) => {
    const { name, label, star, inputStyles, options, ...rest } = props
    return (
       <div>
-         <label  htmlFor={name} className="block font-semibold  ">
+         <label htmlFor={name} className="block font-semibold  ">
             {label} {star && <span className='text-red-600'>*</span>}
          </label>
          <Field

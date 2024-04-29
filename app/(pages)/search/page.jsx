@@ -18,6 +18,9 @@ const Search = () => {
   const gender = searchParams.get('gender')
   const ageFrom = searchParams.get('agefrom')
   const ageTo = searchParams.get('ageto')
+  const maritalStatus = searchParams.get('maritalstatus')
+  console.log(maritalStatus)
+
 
 
   const [showHeight, setShowHeight] = useState(false);
@@ -37,8 +40,8 @@ const Search = () => {
     try {
       const profilesData = await getAllProfies();
       const maleProfilesData = profilesData.filter((profile) => {
-
-        return (profile.partnerAgeFrom === parseInt(ageFrom) && profile.gender.toLowerCase() === gender && profile.partnerAgeTo === parseInt(ageTo)) || (profile.partnerAgeFrom === parseInt(ageFrom) && profile.gender.toLowerCase() === gender) || (profile.partnerAgeFrom === parseInt(ageTo) && profile.gender.toLowerCase() === gender) || (profile.partnerAgeFrom === parseInt(ageFrom) && profile.partnerAgeTo === parseInt(ageTo)) || profile.gender.toLowerCase() === gender
+        return (profile.partnerAgeFrom === parseInt(ageFrom) && profile.gender.toLowerCase() === gender && profile.partnerAgeTo === parseInt(ageTo) && profile.maritalStatus.toLowerCase() === maritalStatus.toLowerCase()) || (profile.gender.toLowerCase() === gender && profile.maritalStatus.toLowerCase() === maritalStatus.toLowerCase()) ||
+        (profile.partnerAgeFrom === parseInt(ageFrom) && profile.gender.toLowerCase() === gender) || (profile.partnerAgeFrom === parseInt(ageTo) && profile.gender.toLowerCase() === gender) || (profile.partnerAgeFrom === parseInt(ageFrom) && profile.partnerAgeTo === parseInt(ageTo)) || profile.gender.toLowerCase() === gender
 
       })
 
@@ -60,7 +63,7 @@ const Search = () => {
           <div className='w-1/3'>
             <h3>Advanced Searched / Features </h3>
             <div className='flex flex-col gap-y-3'>
-{/* 
+              {/* 
               <div className='border border-slate-400 rounded-md'>
                 <div className='px-3 py-3'>
                   <div className='w-full flex flex-row '>

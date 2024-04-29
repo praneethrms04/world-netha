@@ -2,10 +2,13 @@
 "use client"
 import Image from 'next/image'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import React from 'react'
 
 const FeatureCard = (props) => {
    const { profileData } = props
+   const router = useRouter()
+  
 
 
    return (

@@ -6,6 +6,8 @@ import CheckBox from "./CheckBox";
 import Textarea from "./Textarea";
 import Select from "./Select";
 import RadioButton from "./RadioButton";
+import DatePicker from "./DatePicker";
+import CheckBoxGroup from "./CheckBoxGroup";
 
 
 const FormControl = ({ control, ...attributes }) => {
@@ -20,6 +22,10 @@ const FormControl = ({ control, ...attributes }) => {
          return <Button {...attributes} />;
       case "checkbox":
          return <CheckBox {...attributes} />;
+      case "checkbox-group":
+         return <CheckBoxGroup {...attributes} />
+      case "date":
+         return <DatePicker {...attributes} />;
       case "radio":
          return <RadioButton {...attributes} />;
       default:

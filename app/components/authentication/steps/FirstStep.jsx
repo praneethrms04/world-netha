@@ -12,13 +12,12 @@ const FirstStep = () => {
       password: yup.string().required('Password is required'),
       gender: yup.string().required('Gender is required'),
       maritalStatus: yup.string().required('Marital status is required'),
-
    })
    return (
       <div>
          <FormStep
             stepName='basic-info'
-            // validationSchema={stepOnevalidationSchema}
+            validationSchema={stepOnevalidationSchema}
             onSubmit={console.log('Step one submitted')}
          >
             <div
@@ -37,7 +36,6 @@ const FirstStep = () => {
                         star="true"
                         inputStyles='w-full text-black '
                         labelStyles='text-black'
-
                      />
                   </div>
                   <div className='w-1/2'>

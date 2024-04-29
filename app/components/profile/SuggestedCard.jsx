@@ -6,17 +6,21 @@ import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 import { Button } from '../ui/Button'
 import { cmToFeetAndInches } from '@/app/utils/helpers/cmToFeet'
+import { FaUserCircle } from "react-icons/fa";
+import * as assets from "@/public/assets/index"
 
 
 const SuggestedCcard = (props) => {
    const { profileData } = props
+   console.log(profileData.images)
    return (
       <div className='shadow-sm rounded-lg px-4 py-4 border bg-[#F2F2F280]  shadow-[#b8b28d] w-full'  >
          <div className='flex flex-row gap-x-6'>
             <div className='flex items-center justify-center'>
+
                <Image
                   alt={profileData?.firstName}
-                  src={profileData?.images[0]}
+                  src={profileData?.images ? profileData?.images[0] : assets.user}
                   width={80}
                   height={80}
                   className="h-20 w-20 rounded-md object-cover"
