@@ -10,39 +10,88 @@ import { getDatabase, set } from 'firebase/database'
 import app from '@/app/firebaseConfig'
 import { ref } from 'firebase/database'
 import { toast } from 'react-toastify'
+import Selector from '@/app/components/ui/Selector'
+import { Country, State, City } from 'country-state-city';
 // import citiesData from "../../utils/options/state_cities.json"
 
 const FamilyInformation = () => {
 
-   const [state, setState] = useState('')
-   const [citiesOptions, setCitiesOption] = useState([])
-   const [currentCitiesOptions, setCurrentCitiesOption] = useState([])
+
+
+
+
+   // const [state, setState] = useState('')
    const [userData, setUserData] = useState({})
    const [dateOfBirth, setDateOfBirth] = useState(userData.dateOfBirth || "")
-
    const [profileId, setProfileId] = useState()
 
-   console.log(currentCitiesOptions)
+
+   let countryData = Country.getAllCountries();
+   let partnerCountryData = Country.getAllCountries();
+
+   const [stateData, setStateData] = useState();
+   const [cityData, setCityData] = useState();
+
+   const [partnerStateData, setPartnerStateData] = useState();
+   const [partnerCityData, setPartnerCityData] = useState();
+
+   const [country, setCountry] = useState();
+   const [state, setState] = useState();
+   const [city, setCity] = useState();
+
+   const [partnerCountry, setPartnerCountry] = useState();
+   const [partnerState, setPartnerState] = useState();
+   const [partnerCity, setPartnerCity] = useState();
+
+   useEffect(() => {
+      if (!partnerCountry) {
+         setPartnerCountry(userData.partnerCountry)
+      }
+      if (!country) {
+         setCountry(userData.country)
+      }
+   }, [userData.country, userData.partnerCountry])
+
+   useEffect(() => {
+      setStateData(State.getStatesOfCountry(country?.isoCode));
+   }, [country]);
+
+   useEffect(() => {
+      if (userData?.country?.isoCode === country?.isoCode) {
+         stateData && setState(userData.state);
+      } else {
+         stateData && setState(stateData[0]);
+      }
+   }, [stateData, userData.state, country]);
 
 
-   const getCityOptions = (state) => {
-      const res = citiesData.filter(cities => cities.State.toLocaleLowerCase() === state)
-      const citiesObj = res.map((city) => {
-         return {
-            label: city.City,
-            value: city.City.toLocaleLowerCase()
-         }
-      })
+   useEffect(() => {
+      cityData && setCity(cityData[0]);
+   }, [cityData]);
 
-      document.getElementById('state')
-      setCitiesOption(citiesObj)
-   }
+   useEffect(() => {
+      setCityData(City.getCitiesOfState(country?.isoCode, state?.isoCode));
+   }, [state]);
 
-   const selectstate = (e) => {
-      setState(e.target.value)
-      getCityOptions(e.target.value)
-   }
+   useEffect(() => {
+      if (partnerCountry && partnerCountry.isoCode) {
+         setPartnerStateData(State.getStatesOfCountry(partnerCountry.isoCode));
+      }
+   }, [partnerCountry]);
 
+   useEffect(() => {
+      partnerStateData && setPartnerState(partnerStateData[0]);
+   }, [partnerStateData]);
+
+   useEffect(() => {
+      partnerCityData && setPartnerCity(partnerCityData[0]);
+   }, [partnerCityData]);
+
+   useEffect(() => {
+      if (partnerCountry && partnerState) {
+         setPartnerCityData(City.getCitiesOfState(partnerCountry.isoCode, partnerState.isoCode));
+      }
+   }, [partnerState, partnerCountry]);
 
 
    const fetchCurrentuser = async () => {
@@ -50,8 +99,7 @@ const FamilyInformation = () => {
       const { id, userObject } = currentUser
       setUserData(userObject)
       setProfileId(id)
-      setCurrentCitiesOption([{ key: userObject.city, value: userObject.city }])
-      setState(userObject.state || "")
+      // setState(userObject.state || "")
 
    }
 
@@ -225,41 +273,37 @@ const FamilyInformation = () => {
                                     </div>
 
                                  </div>
+
                                  <div className='w-full flex gap-x-3 '>
-                                    <div className='w-1/3' >
-                                       <FormControl
-                                          control="select"
-                                          label="Citizen of"
-                                          name="citizenship"
-                                          star="true"
-                                          disabled
-                                          inputStyles={`w-full text-black`}
-                                          options={citizenshipDataOptions}
-                                       />
+                                    <div className='w-1/3 ' >
+                                       {
+                                          country && (
+                                             <>
+                                                <label className='font-semibold' htmlFor="">Citizen of <span className='text-red-600'>*</span></label>
+                                                <Selector data={countryData} selected={country} setSelected={setCountry} />
+                                             </>
+                                          )
+                                       }
                                     </div>
                                     <div className='w-1/3' >
-                                       <FormControl
-                                          control="select"
-                                          label="State "
-                                          name="state"
-                                          star="true"
-                                          value={state}
-                                          disabled
-                                          inputStyles={`w-full text-black`}
-                                          onChange={selectstate}
-                                          options={stateDataOptions}
-                                       />
+                                       {
+                                          state && (
+                                             <>
+                                                <label className='font-semibold' htmlFor="">Native State <span className='text-red-600'>*</span></label>
+                                                <Selector data={stateData} selected={state} setSelected={setState} />
+                                             </>
+                                          )
+                                       }
                                     </div>
                                     <div className='w-1/3' >
-                                       <FormControl
-                                          control="select"
-                                          label="City "
-                                          name="city"
-                                          star="true"
-                                          disabled
-                                          inputStyles={`w-full text-black`}
-                                          options={currentCitiesOptions || citiesOptions}
-                                       />
+                                       {
+                                          city && (
+                                             <>
+                                                <label className='font-semibold' htmlFor="">Native City <span className='text-red-600'>*</span></label>
+                                                <Selector data={cityData} selected={city} setSelected={setCity} />
+                                             </>
+                                          )
+                                       }
                                     </div>
                                  </div>
                                  <div>

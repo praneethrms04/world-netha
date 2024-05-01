@@ -85,7 +85,7 @@ const Header = () => {
             isOpen={openRegister}
             onRequestClose={() => setOpenRegister(false)}
             style={customStyles}
-            // className="bg-white rounded-md shadow-2xl  flex justify-center items-center absolute top-[15%] left-1/3 px-3 py-3 backdrop-blur-md w-[800px]  h-[550px] overflow-auto "
+         // className="bg-white rounded-md shadow-2xl  flex justify-center items-center absolute top-[15%] left-1/3 px-3 py-3 backdrop-blur-md w-[800px]  h-[550px] overflow-auto "
 
          >
             <Register openLogin={openLogin} setOpenLogin={setOpenLogin} openRegister={openRegister} setOpenRegister={setOpenRegister} />

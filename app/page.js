@@ -46,8 +46,9 @@ export default function Home() {
     try {
       const profilesData = await getAllProfies();
       const maleProfilesData = profilesData.filter(
-        (profile) => profile.gender === "Male" && profile.id !== currentId
+        (profile) => profile.gender === "Male" && profile.id !== currentId && profile.adminPriority === true
       ).slice(0, 4);
+      console.log(maleProfilesData)
       setMaleProfiles(maleProfilesData);
       setLoading(false)
     } catch (error) {
@@ -59,7 +60,7 @@ export default function Home() {
     try {
       const profilesData = await getAllProfies();
       const femaleProfilesData = profilesData.filter(
-        (profile) => profile.gender === "Female" && profile.id !== currentId
+        (profile) => profile.gender === "Female" && profile.id !== currentId && profile.adminPriority === true
 
       ).slice(0, 4);
       setFemaleProfiles(femaleProfilesData);
@@ -88,7 +89,7 @@ export default function Home() {
                     {
                       maleProfiles && maleProfiles.filter((profile) => profile.gender === "Male").slice(0, 5).map((profileData, index) => {
                         return <div className='flex ms-10 '> <FeatureCard key={index} profileData={profileData} /> </div>
-                      })
+                      }) 
                     }
                   </>
                 )

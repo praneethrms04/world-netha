@@ -59,13 +59,8 @@ const Register = (props) => {
 
    }, [])
 
-
-
-
-
    useEffect(() => {
       setStateData(State.getStatesOfCountry(country?.isoCode));
-
    }, [country]);
 
    useEffect(() => {
@@ -81,17 +76,9 @@ const Register = (props) => {
    }, [state]);
 
    useEffect(() => {
-
-
-
       if (partnerCountry && partnerCountry.isoCode) {
          setPartnerStateData(State.getStatesOfCountry(partnerCountry.isoCode));
       }
-
-
-
-
-
    }, [partnerCountry]);
 
    useEffect(() => {
@@ -103,7 +90,6 @@ const Register = (props) => {
    }, [partnerCityData]);
 
    useEffect(() => {
-
       if (partnerCountry && partnerState) {
          setPartnerCityData(City.getCitiesOfState(partnerCountry.isoCode, partnerState.isoCode));
       }
@@ -240,7 +226,7 @@ const Register = (props) => {
          .max(15, "Must be 15 characters or below ")
          .min(3, "Must be 3 characters or above "),
       email: yup.string().required('Email address is required').email("Invalid email format"),
-      password: yup.string().required('Password is required').min(8, "Password must be at least 8 characters"),
+      password: yup.string().required('Password is required').min(6, "Password must be at least 6 characters"),
       gender: yup.string().required('Gender is required'),
       maritalStatus: yup.string().required('Marital status is required'),
    })
@@ -262,8 +248,15 @@ const Register = (props) => {
    })
 
 
+
    const handleFormSubmit = async (values) => {
       try {
+
+         const date = values.dateOfBirth;
+         const day = date.getDate().toString().padStart(2, '0');
+         const month = (date.getMonth() + 1).toString().padStart(2, '0');
+         const year = date.getFullYear().toString();
+         const formattedDate = `${day}/${month}/${year}`;
 
          const data = {
             ...values,
@@ -273,9 +266,10 @@ const Register = (props) => {
             partnerCountry: partnerCountry,
             partnerState: partnerState,
             partnerCity: partnerCity,
-            // dateOfBirth: dateOfBirth,
+            dateOfBirth: formattedDate,
             images: imageUrls
          };
+         console.log(data)
 
          // Save user data to the database
          const db = getDatabase(app);
@@ -457,7 +451,6 @@ const Register = (props) => {
                            star={true}
                            name="dateOfBirth"
                            inputStyles="w-full text-black"
-
                         />
                      </div>
                      <div className='w-1/3'>

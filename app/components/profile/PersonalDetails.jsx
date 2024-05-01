@@ -6,7 +6,6 @@ import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
 import { Button } from '../ui/Button'
-import * as assets from "@/public/assets/index"
 
 const ProfieleDetails = (props) => {
    const { profileData } = props
@@ -167,15 +166,15 @@ const ProfieleDetails = (props) => {
                         </div>
                         <div className='flex items-center '>
                            <p className='w-1/2'>Native City</p>
-                           <p className='w-1/2 font-bold'>{profileData?.city}</p>
+                           <p className='w-1/2 font-bold'>{profileData?.city?.name}</p>
                         </div>
                         <div className='flex items-center '>
                            <p className='w-1/2'>Native State</p>
-                           <p className='w-1/2 font-bold'>{profileData?.state}</p>
+                           <p className='w-1/2 font-bold'>{profileData?.state?.name}</p>
                         </div>
                         <div className='flex items-center '>
                            <p className='w-1/2'>Citizen of</p>
-                           <p className='w-1/2 font-bold'>{profileData?.citizenship}</p>
+                           <p className='w-1/2 font-bold'>{profileData?.state?.name}</p>
                         </div>
                         <div className='flex items-center '>
                            <p className='w-1/2'>Contact No</p>
@@ -222,10 +221,10 @@ const ProfieleDetails = (props) => {
                            <p className='w-1/2'>Gothram</p>
                            <p className='w-1/2 font-bold'>: {profileData?.partnerGothram}</p>
                         </div>
-                        <div className='flex items-center '>
+                        {/* <div className='flex items-center '>
                            <p className='w-1/2'>Complexion</p>
-                           <p className='w-1/2 font-bold'>: {profileData?.partnerComplexion}</p>
-                        </div>
+                           <p className='w-1/2 font-bold'>: {profileData?.partnerComplexion.length}</p>
+                        </div> */}
                         <div className='flex items-center'>
                            <p className='w-1/2'>Mother Tongue</p>
                            <p className='w-1/2 font-bold'>: {profileData?.partnerMotherTongue}</p>
@@ -244,7 +243,7 @@ const ProfieleDetails = (props) => {
 
                      </div>
                      <div className='w-1/2 flex flex-col gap-y-2'>
-                        <div className='flex items-center '>
+                        {/* <div className='flex items-center '>
                            <p className='w-1/2'>Qualification Category</p>
                            <p className='w-1/2 font-bold'>: {profileData?.partnerQualificationCategory}</p>
                         </div>
@@ -259,18 +258,18 @@ const ProfieleDetails = (props) => {
                         <div className='flex items-center '>
                            <p className='w-1/2'>Occupation Details</p>
                            <p className='w-1/2 font-bold'>: {profileData?.partnerOccupationDetails}</p>
-                        </div>
+                        </div> */}
                         <div className='flex items-center '>
                            <p className='w-1/2'>Citizen of</p>
-                           <p className='w-1/2 font-bold'>: {profileData?.partnerCitizenship}</p>
+                           <p className='w-1/2 font-bold'>: {profileData?.partnerState?.name}</p>
                         </div>
                         <div className='flex items-center '>
                            <p className='w-1/2'>State</p>
-                           <p className='w-1/2 font-bold'>: {profileData?.partnerState}</p>
+                           <p className='w-1/2 font-bold'>: {profileData?.partnerState?.name}</p>
                         </div>
                         <div className='flex items-center '>
                            <p className='w-1/2'>City</p>
-                           <p className='w-1/2 font-bold'>: {profileData?.partnerCity}</p>
+                           <p className='w-1/2 font-bold'>: {profileData?.partnerCity?.name}</p>
                         </div>
 
                         {/* <div className='flex items-center '>

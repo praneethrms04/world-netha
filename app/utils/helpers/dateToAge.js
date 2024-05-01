@@ -1,13 +1,19 @@
 
-export const dateToAge = (date) => {
-   if (date === undefined || date === null) {
-      return null;
+export const dateToAge = (dateString) => {
+   const [day, month, year] = dateString.split('/');
+   const inputDate = new Date(`${year}-${month}-${day}`);
+   const currentDate = new Date();
+   let age = currentDate.getFullYear() - inputDate.getFullYear();
+
+   if (
+      currentDate.getMonth() < inputDate.getMonth() ||
+      (currentDate.getMonth() === inputDate.getMonth() &&
+         currentDate.getDate() < inputDate.getDate())
+   ) {
+      age--;
    }
-   let dob = date.replace(/-/g, '')
-   let year = Number(dob.substr(0, 4))
-   let month = Number(dob.substr(4, 2))
-   let day = Number(dob.substr(6, 2))
-   let today = new Date()
-   let age = today.getFullYear() - year
+
    return age
+
 }
+

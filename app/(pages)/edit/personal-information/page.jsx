@@ -44,6 +44,7 @@ const PersonalInfo = () => {
     kujaDosam: userData.kujaDosam || "",
     complexion: userData.complexion || "",
     padam: userData.padam || "",
+    dateOfBirth: userData.dateOfBirth || "",
     // step 3
     motherTongue: userData.motherTongue || '',
     religion: userData.religion || "",
@@ -98,9 +99,14 @@ const PersonalInfo = () => {
   };
 
   const updatePersonalInfo = (values) => {
+    const date = values.dateOfBirth;
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const year = date.getFullYear().toString();
+    const formattedDate = `${day}/${month}/${year}`;
     const data = {
-      dateOfBirth: dateOfBirth,
       ...values,
+      dateOfBirth: formattedDate,
       images: userData.images,
 
     }
@@ -189,18 +195,13 @@ const PersonalInfo = () => {
                   </div>
                   <div className='w-full flex flex-row gap-4 items-center'>
                     <div className='w-1/3'>
-                      <label className="flex flex-col">
-                        <div className='font-semibold'>
-                          Date of Birth <span className='text-red-600 font-semibold'>*</span>
-                        </div>
-                        <input
-                          className="input-field border border-slate-400 py-[7px] px-2 rounded-md"
-                          type="date"
-                          placeholder="Select date of birth"
-                          value={dateOfBirth}
-                          onChange={(e) => setDateOfBirth(e.target.value)}
-                        />
-                      </label>
+                      <FormControl
+                        control="date"
+                        label="Date of Birth"
+                        star={true}
+                        name="dateOfBirth"
+                        inputStyles="w-full text-black"
+                      />
                     </div>
                     <div className='w-1/3'>
                       <FormControl
@@ -214,7 +215,7 @@ const PersonalInfo = () => {
                     </div>
                     <div className='w-1/3' >
                       <FormControl
-                        control="select"
+                        control="input"
                         label="Place of Birth"
                         name="placeOfBirth"
                         star="true"

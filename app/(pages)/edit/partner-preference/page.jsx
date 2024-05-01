@@ -3,48 +3,103 @@ import { Form, Formik } from 'formik'
 import React, { useEffect, useState } from 'react'
 import citiesData from "../../../../app/utils/options/state_cities.json"
 import FormControl from '@/app/components/ui/FormControl'
-import { casteDataOptions, citizenshipDataOptions, complexionOptions, kujaDosamOptions, motherTongueOptions, nakshatrasOptions, occupationDataOptions, physicalStatusOptions, qualificationDataOptions, raashiOptions, religionOptions, stateDataOptions } from '@/app/utils/options'
+import { ageFromOptions, ageToOptions, casteDataOptions, citizenshipDataOptions, complexionOptions, heightOptions, kujaDosamOptions, motherTongueOptions, nakshatrasOptions, occupationDataOptions, partnerOccupationDataOptions, partnerQualificationDataOptions, physicalStatusOptions, qualificationDataOptions, raashiOptions, religionOptions, stateDataOptions } from '@/app/utils/options'
 import { Button } from '@/app/components/ui/Button'
 import { getCurrentUser } from '@/app/lib/getCurrentUser'
 import { getDatabase, ref, set } from 'firebase/database'
 import app from '@/app/firebaseConfig'
 import { toast } from 'react-toastify'
+import { Country, State, City } from 'country-state-city'
+import Selector from '@/app/components/ui/Selector'
 
 
 const PartnerPreference = () => {
 
    const [partnerCitiesOptions, setPartnerCitiesOption] = useState([])
-   const [partnerState, setPartnerState] = useState('')
-   const [partnerOptions, setPartnerOptions] = useState([])
+
+
    const [profileId, setProfileId] = useState()
    const [userData, setUserData] = useState({})
-   const [dateOfBirth, setDateOfBirth] = useState(userData.dateOfBirth || "")
 
-   const partnerSelectstate = (e) => {
-      setPartnerState(e.target.value)
-      getPartnerCityOptions(e.target.value)
-   }
-   const getPartnerCityOptions = (state) => {
-      const res = citiesData.filter(cities => cities.State.toLocaleLowerCase() === state)
-      const citiesObj = res.map((city) => {
-         return {
-            value: city.City,
-            key: city.City.toLocaleLowerCase()
-         }
-      })
-      setPartnerCitiesOption(citiesObj)
-      document.getElementById('partnerState')
-   }
+   console.log(userData)
+   let countryData = Country.getAllCountries();
+   let partnerCountryData = Country.getAllCountries();
+
+   const [stateData, setStateData] = useState();
+   const [cityData, setCityData] = useState();
+
+   const [partnerStateData, setPartnerStateData] = useState();
+   const [partnerCityData, setPartnerCityData] = useState();
+
+   const [country, setCountry] = useState();
+   const [state, setState] = useState();
+   const [city, setCity] = useState();
+
+
+   const [partnerCountry, setPartnerCountry] = useState();
+   console.log(partnerCountry)
+   const [partnerState, setPartnerState] = useState();
+   const [partnerCity, setPartnerCity] = useState();
+
+
+   useEffect(() => {
+      if (!partnerCountry) {
+         setPartnerCountry(userData.partnerCountry)
+      }
+      if (!country) {
+         setCountry(userData.country)
+      }
+   }, [userData.country, userData.partnerCountry])
+
+   useEffect(() => {
+      setStateData(State.getStatesOfCountry(country?.isoCode));
+   }, [country]);
+
+   useEffect(() => {
+      stateData && setState(userData.state || stateData[0]);
+   }, [stateData]);
+
+   useEffect(() => {
+      cityData && setCity(userData.city || cityData[0]);
+   }, [cityData]);
+
+   useEffect(() => {
+      setCityData(City.getCitiesOfState(country?.isoCode, state?.isoCode));
+   }, [state]);
+
+   useEffect(() => {
+      if (partnerCountry && partnerCountry.isoCode) {
+         setPartnerStateData(State.getStatesOfCountry(partnerCountry.isoCode));
+      }
+   }, [partnerCountry]);
+
+   useEffect(() => {
+      if (userData?.partnerCountry?.isoCode === partnerCountry?.isoCode) {
+         partnerStateData && setPartnerState(userData.partnerState);
+      } else {
+         partnerStateData && setPartnerState(partnerStateData[0]);
+      }
+
+   }, [partnerStateData, userData.partnerState, partnerCountry]);
+
+   useEffect(() => {
+      partnerCityData && setPartnerCity(partnerCityData[0]);
+   }, [partnerCityData]);
+
+   useEffect(() => {
+      if (partnerCountry && partnerState) {
+         setPartnerCityData(City.getCitiesOfState(partnerCountry.isoCode, partnerState.isoCode));
+      }
+   }, [partnerState, partnerCountry]);
+
+
+
 
    const fetchCurrentuser = async () => {
       const currentUser = await getCurrentUser()
       const { id, userObject } = currentUser
       setUserData(userObject)
       setProfileId(id)
-      setPartnerState(userObject.partnerState || "")
-      setDateOfBirth(userObject.dateOfBirth || "")
-      setPartnerOptions([{ key: userObject?.partnerCity, value: userObject?.partnerCity }])
-
    }
 
    useEffect(() => {
@@ -86,9 +141,6 @@ const PartnerPreference = () => {
       noOfBrothers: userData.noOfBrothers || "",
       noOfSisters: userData.noOfSisters || "",
       // step 6
-      citizenship: userData.citizenship || "",
-      state: userData.state || "",
-      city: userData.city || "",
       address: userData.address || "",
       contactNo: userData.contactNo || "",
       alternatephone: userData.alternatephone || "",
@@ -98,9 +150,6 @@ const PartnerPreference = () => {
       partnerQualificationDetails: userData.partnerQualificationDetails || "",
       partnerOccupationCategory: userData.partnerOccupationCategory || "",
       partnerOccupationDetails: userData.partnerOccupationDetails || "",
-      partnerCitizenship: userData.partnerCitizenship || "",
-      partnerState: userData.partnerState || "",
-      partnerCity: userData.partnerCity || "",
       //step 8
       partnerAgeFrom: userData.partnerAgeFrom || "",
       partnerAgeTo: userData.partnerAgeTo || "",
@@ -122,15 +171,23 @@ const PartnerPreference = () => {
    const updatePartnerPreference = (values) => {
       const data = {
          ...values,
+         country: userData.country,
+         state: userData.state,
+         city: userData.city,
+         partnerCountry: partnerCountry,
+         partnerState: partnerState,
+         partnerCity: partnerCity,
+         dateOfBirth: userData.dateOfBirth,
          images: userData.images
       }
-      const db = getDatabase(app)
-      const updatedRef = ref(db, `users/${profileId}`)
-      set(updatedRef, { ...data }).then(() => {
-         toast.success("profile updated successfully")
-      }).catch((error) => {
-         toast.error(`error ${error.message}  `)
-      })
+      console.log(data)
+      // const db = getDatabase(app)
+      // const updatedRef = ref(db, `users/${profileId}`)
+      // set(updatedRef, { ...data }).then(() => {
+      //    toast.success("profile updated successfully")
+      // }).catch((error) => {
+      //    toast.error(`error ${error.message}  `)
+      // })
 
    }
 
@@ -154,129 +211,130 @@ const PartnerPreference = () => {
                            >
                               <h3 className='pb-2'>Partner Preferences</h3>
                               <div className='w-full flex gap-x-3'>
-                                 <div className=' w-1/2'>
+                                 <div className=' w-full'>
                                     <FormControl
-                                       control="select"
+                                       control="checkbox-group"
                                        label="Education category "
                                        name="partnerQualificationCategory"
                                        star="true"
                                        inputStyles={`w-full text-black`}
-                                       options={qualificationDataOptions}
+                                       options={partnerQualificationDataOptions}
                                     />
                                  </div>
-                                 <div className=' w-1/2'>
+                              </div>
+                              <div className='w-full flex gap-x-3'>
+                                 <div className=' w-full'>
                                     <FormControl
                                        control="input"
                                        label="Education Details"
                                        name="partnerQualificationDetails"
                                        type='text'
-                                       star="true"
                                        inputStyles='w-full text-black '
                                        labelStyles='text-black'
                                     />
                                  </div>
                               </div>
                               <div className='w-full flex gap-x-3'>
-                                 <div className=' w-1/2'>
+                                 <div className=' w-full'>
                                     <FormControl
-                                       control="select"
+                                       control="checkbox-group"
                                        label="Occupation category "
                                        name="partnerOccupationCategory"
                                        star="true"
                                        inputStyles={`w-full text-black`}
-                                       options={occupationDataOptions}
+                                       options={partnerOccupationDataOptions}
                                     />
                                  </div>
-                                 <div className=' w-1/2'>
+                              </div>
+                              <div className='w-full flex gap-x-3'>
+                                 <div className=' w-full'>
                                     <FormControl
                                        control="input"
                                        label="Occupation Details"
                                        name="partnerOccupationDetails"
                                        type='text'
-                                       star="true"
                                        inputStyles='w-full text-black '
                                        labelStyles='text-black'
                                     />
                                  </div>
                               </div>
+
                               <div className='w-full flex gap-x-3 '>
-                                 <div className='w-1/3' >
-                                    <FormControl
-                                       control="select"
-                                       label="Citizen of"
-                                       name="partnerCitizenship"
-                                       star="true"
-                                       disabled
-                                       inputStyles={`w-full text-black`}
-                                       options={citizenshipDataOptions}
-                                    />
+                                 <div className='w-1/3 ' >
+                                    {
+                                       partnerCountry && (
+                                          <>
+                                             <label className='font-semibold' htmlFor="">Citizen of <span className='text-red-600'>*</span></label>
+                                             <Selector data={partnerCountryData} selected={partnerCountry} setSelected={setPartnerCountry} />
+                                          </>
+                                       )
+                                    }
                                  </div>
                                  <div className='w-1/3' >
-                                    <FormControl
-                                       control="select"
-                                       label="State "
-                                       name="partnerState"
-                                       disabled
-                                       star="true"
-                                       value={partnerState}
-                                       inputStyles={`w-full text-black`}
-                                       onChange={partnerSelectstate}
-                                       options={stateDataOptions}
-                                    />
+                                    {
+                                       partnerState && (
+                                          <>
+                                             <label className='font-semibold' htmlFor="">Native State <span className='text-red-600'>*</span></label>
+                                             <Selector data={partnerStateData} selected={partnerState} setSelected={setPartnerState} />
+                                          </>
+                                       )
+                                    }
                                  </div>
                                  <div className='w-1/3' >
-                                    <FormControl
-                                       control="select"
-                                       label="City"
-                                       name="partnerCity"
-                                       star="true"
-                                       disabled
-                                       inputStyles={`w-full text-black`}
-                                       options={partnerOptions || partnerCitiesOptions || []}
-                                    />
+                                    {
+                                       partnerCity && (
+                                          <>
+                                             <label className='font-semibold' htmlFor="">Native City <span className='text-red-600'>*</span></label>
+                                             <Selector data={partnerCityData} selected={partnerCity} setSelected={setPartnerCity} />
+                                          </>
+                                       )
+                                    }
                                  </div>
                               </div>
                               <div className="flex flex-col gap-x-4">
-                                 <div className='flex gap-x-2' >
-                                    <FormControl
-                                       control="input"
-                                       label="Age From"
-                                       name="partnerAgeFrom"
-                                       type='number'
-                                       star="true"
-                                       inputStyles='w-full text-black '
-                                       labelStyles='text-black'
-                                    />
-                                    <FormControl
-                                       control="input"
-                                       label="Age To"
-                                       name="partnerAgeTo"
-                                       type='number'
-                                       star="true"
-                                       inputStyles='w-full text-black '
-                                       labelStyles='text-black'
-                                    />
+                                 <div className='w-full flex gap-x-2' >
+                                    <div className="w-3/12">
+                                       <FormControl
+                                          control="select"
+                                          label="Age From"
+                                          name="partnerAgeFrom"
+                                          star="true"
+                                          options={ageFromOptions}
+                                          inputStyles={`w-full text-black`}
+                                       />
+                                    </div>
+                                    <div className="w-3/12">
+                                       <FormControl
+                                          control="select"
+                                          label="Age To"
+                                          name="partnerAgeTo"
+                                          star="true"
+                                          options={ageToOptions}
+                                          inputStyles={`w-full text-black`}
+                                       />
+                                    </div>
+                                    <div className="w-3/12">
+                                       <FormControl
+                                          control="select"
+                                          label="Height From"
+                                          name="partnerHeightFrom"
+                                          star="true"
+                                          options={heightOptions}
+                                          inputStyles={`w-full text-black`}
+                                       />
+                                    </div>
+                                    <div className="w-3/12">
+                                       <FormControl
+                                          control="select"
+                                          label="Height To"
+                                          name="partnerHeightTo"
+                                          star="true"
+                                          options={heightOptions}
+                                          inputStyles={`w-full text-black`}
+                                       />
+                                    </div>
                                  </div>
-                                 <div className='flex gap-x-2' >
-                                    <FormControl
-                                       control="input"
-                                       label="Height From"
-                                       name="partnerHeightFrom"
-                                       type='number'
-                                       star="true"
-                                       inputStyles='w-full text-black '
-                                       labelStyles='text-black'
-                                    />
-                                    <FormControl
-                                       control="input"
-                                       label="Height To"
-                                       name="partnerHeightTo"
-                                       type='number'
-                                       star="true"
-                                       inputStyles='w-full text-black '
-                                       labelStyles='text-black'
-                                    />
-                                 </div>
+
                               </div>
                               <div className='flex gap-x-3 w-full'>
                                  <div className='w-1/3' >
@@ -354,7 +412,7 @@ const PartnerPreference = () => {
                               </div>
                               <div className='flex items-center  gap-x-4'>
                                  <FormControl
-                                    control="radio"
+                                    control="checkbox-group"
                                     label="Complexion "
                                     name="partnerComplexion"
                                     star="true"
@@ -388,7 +446,7 @@ const PartnerPreference = () => {
                               </div>
                               <div className=' flex space-x-4 my-2'>
                                  <Button size="small" className="px-2 rounded-md"> Cancel</Button>
-                                 <Button variant="gray" size="small" className="px-2 rounded-md text-sm" > Save Changes</Button>
+                                 <Button type="submit" variant="gray" size="small" className="px-2 rounded-md text-sm" > Save Changes</Button>
                               </div>
                            </div>
                         </Form>
